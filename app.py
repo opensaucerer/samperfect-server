@@ -1,3 +1,4 @@
+# importing required modules
 import os
 from flask import Flask, url_for, jsonify, render_template, request
 from dotenv import load_dotenv
@@ -17,10 +18,9 @@ app.config['MAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
 # app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
+
 # defining the routes
 # home route
-
-
 @app.route('/')
 def home():
     response = {"status": "success",
