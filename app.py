@@ -13,9 +13,9 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get("EMAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
-# app.config['MAIL_USE_TLS'] = False
-# app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
+# allowing cross site origin requests
+CORS(app)
 
 # defining the routes
 # home route
