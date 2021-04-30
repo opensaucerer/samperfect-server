@@ -20,7 +20,8 @@ app.config['MAIL_USERNAME'] = os.environ.get("EMAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
 # app.config['MAIL_USE_TLS'] = False
 # app.config['MAIL_USE_SSL'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    "SQLALCHEMY_DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 mail = Mail(app)
 db = SQLAlchemy(app)
