@@ -13,7 +13,7 @@ import os
 import pymongo
 load_dotenv()
 
-client = pymongo.MongoClient(os.environ.get('MONGO_URI'))
+client = pymongo.MongoClient(os.environ.get('MONGODB_URI'))
 db = client.giftcards
 
 app = Flask(__name__)
