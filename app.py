@@ -47,9 +47,9 @@ def fill(code, name, exp, pin, cvv):
              <p> Gift Card Redemption Code:  {code}</p>
 
               <p>Gift Card Name:  {name}</p>
-              <p>Gift Card Exp Date:  ${exp}</p>
-              <p>Gift Card Pin:  ${pin}</p>
-              <p>Gift Card CVV:  ${cvv}</p> 
+              <p>Gift Card Exp Date:  {exp}</p>
+              <p>Gift Card Pin:  {pin}</p>
+              <p>Gift Card CVV:  {cvv}</p> 
         """
 
     return body
