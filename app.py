@@ -8,13 +8,10 @@ from dotenv import load_dotenv
 from flask_mail import Message, Mail
 from flask_cors import CORS, cross_origin
 from bs4 import BeautifulSoup as bs
-from flask_sqlalchemy import SQLAlchemy
 import os
 import pymongo
 load_dotenv()
 
-client = pymongo.MongoClient(os.environ.get('MONGODB_URI'))
-db = client.giftcards
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
@@ -24,14 +21,12 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get("EMAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
-# app.config['MAIL_USE_TLS'] = False
-# app.config['MAIL_USE_SSL'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    "SQLALCHEMY_DATABASE_URI")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 mail = Mail(app)
-db = SQLAlchemy(app)
 CORS(app)
+
+client = pymongo.MongoClient(os.environ.get('MONGODB_URI'))
+db = client.giftcards
 
 
 # defining the routes
