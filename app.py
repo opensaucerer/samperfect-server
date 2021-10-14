@@ -107,7 +107,7 @@ def send_email():
 
 # endpoint for sending email
 @app.route('/api/v1/send/', methods=["POST"])
-def send_email():
+def sendMail():
 
     status = True
     try:
