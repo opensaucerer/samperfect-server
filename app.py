@@ -1,15 +1,9 @@
 # importing required modules
 import os
-import csv
-from dotenv.main import rewrite
-import requests
-from flask import Flask, url_for, jsonify, render_template, request
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 from flask_mail import Message, Mail
-from flask_cors import CORS, cross_origin
-from bs4 import BeautifulSoup as bs
-import os
-import pymongo
+from flask_cors import CORS
 load_dotenv()
 
 
@@ -30,7 +24,7 @@ CORS(app)
 # home route
 @app.route('/')
 def home():
-    response = {"status": true,
+    response = {"status": True,
                 "message": "up and active (:", "author": "opensaucerer", "description": "software engineer with 5+ years of experience busy doing juju?",
                 "portfolio": "https://opensaucerer.com"}
     return jsonify(response), 200
@@ -48,7 +42,7 @@ def populate(name, email, message):
               <p> </p>
               <p>You can reach out back to {name} through their email--: {email}</p>
         """
-
+    
     return body
 
 # endpoint for sending email
@@ -103,7 +97,7 @@ def send_email():
 
 # running the app
 if __name__ == '__main__':
-    if os.environ.get('ENVIRONMENT', None) === 'development':
+    if os.environ.get('ENVIRONMENT', None) == 'development':
         app.run(debug=True, port=8000)
     else:
         app.run()
