@@ -103,7 +103,7 @@ def send_email():
 
 # running the app
 if __name__ == '__main__':
-    if os.environ.get('ENVIRONMENT'):
+    if os.environ.get('ENVIRONMENT', None) === 'development':
         app.run(debug=True, port=8000)
     else:
         app.run()
