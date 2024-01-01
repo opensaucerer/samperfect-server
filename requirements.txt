@@ -2,3 +2,4 @@ python-dotenv==1.0.0
 flask==3.0.0
 flask-cors==4.0.0
 flask_mail==0.9.1
+gunicorn==21.2.0
