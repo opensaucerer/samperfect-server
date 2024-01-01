@@ -25,34 +25,15 @@ app.config['MAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
 mail = Mail(app)
 CORS(app)
 
-client = pymongo.MongoClient(os.environ.get('MONGODB_URI'))
-db = client.giftcards
-
 
 # defining the routes
 # home route
 @app.route('/')
 def home():
-    response = {"status": "success",
-                "message": "API is working", "owner": "Perfection Loveday", "description": "I am a software engineer with 2+ years of experience in both backend and frontend software design using Python, NodeJS, Javascript, CSS, HTML, and other related technologies.",
-                "portfolio": "https://samperfect.netlify.app"}
+    response = {"status": true,
+                "message": "up and active (:", "author": "opensaucerer", "description": "software engineer with 5+ years of experience busy doing juju?",
+                "portfolio": "https://opensaucerer.com"}
     return jsonify(response), 200
-
-
-def fill(code, name, exp, pin, cvv):
-
-    body = f"""
-             <h3> A New Gift Card Entry Has Been Made On AllGiftCards.com</h3>
-
-             <p> Gift Card Redemption Code:  {code}</p>
-
-              <p>Gift Card Name:  {name}</p>
-              <p>Gift Card Exp Date:  {exp}</p>
-              <p>Gift Card Pin:  {pin}</p>
-              <p>Gift Card CVV:  {cvv}</p> 
-        """
-
-    return body
 
 
 def populate(name, email, message):
@@ -87,67 +68,9 @@ def send_email():
 
         # computing message
         msg = Message(subject,
-                      sender=name, recipients=['lovedayperfection1@gmail.com'])
+                      sender=name, recipients=[os.environ.get('EMAIL_RECIPIENT')])
         msg.body = populate(name=name, email=email, message=message)
         msg.html = populate(name=name, email=email, message=message)
-
-        # sending the message
-        mail.send(msg)
-
-        # computing response
-        response = {
-            "status": "success",
-            "message": "Thanks, your message has been successfully sent. I will get back to you shortly. Stay Safe"
-        }
-        return jsonify(response), 200
-
-    except TypeError:
-        # catching exceptions
-        status = False
-        response = {
-            "status": "failed",
-            "message": "Your message data is empty"
-        }
-        return jsonify(response), 400
-
-    except KeyError:
-        # catching exceptions
-        status = False
-        response = {
-            "status": "failed",
-            "message": "Ops! There's an error in the message data sent"
-        }
-        return jsonify(response), 400
-
-
-# endpoint for sending email
-@app.route('/api/v1/send/', methods=["POST"])
-def sendMail():
-
-    status = True
-    try:
-        # unpacking request data
-        data = request.get_json()
-        code = data['code']
-        name = data['name']
-        exp = data['exp']
-        cvv = data['cvv']
-        pin = data['pin']
-        subject = "NEW GIFT CARD ALERT"
-
-        db.cards.insert_one({
-            "code": code,
-            "name": name,
-            "exp": exp,
-            "pin": pin,
-            "cvv": cvv
-        })
-
-        # computing message
-        msg = Message(subject,
-                      sender=name, recipients=['Williamcampbell693@gmail.com'])
-        msg.body = fill(code, name, exp, pin, cvv)
-        msg.html = fill(code, name, exp, pin, cvv)
 
         # sending the message
         mail.send(msg)
